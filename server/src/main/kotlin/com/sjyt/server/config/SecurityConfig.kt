@@ -12,7 +12,6 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
 @EnableMethodSecurity(prePostEnabled = true)
 @Configuration
 class SecurityConfig {
-
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
