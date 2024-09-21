@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/auth/api/users")
 class UserController {
-    @GetMapping
+    @GetMapping("/me")
     fun getUser(@AuthenticationPrincipal user: OAuth2User): String {
         return user.name
     }

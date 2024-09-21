@@ -1,35 +1,36 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import {DefaultCsrfRepository} from "./repository/CsrfRepository.ts";
+import {RecoilRoot} from "recoil";
+import Authorized from "./view/auth/Authorized.tsx";
+import UserProvider from "./view/auth/UserProvider.tsx";
+import {DefaultAuthRepository} from "./repository/AuthRepository.ts";
+import Unauthorized from "./view/auth/Unauthorized.tsx";
+import LoginScreen from "./view/auth/LoginScreen.tsx";
+import HomeScreen from "./view/HomeScreen.tsx";
+
 
 function App() {
-  const [count, setCount] = useState(0)
+    const authRepository = new DefaultAuthRepository()
+    const csrfRepository = new DefaultCsrfRepository()
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    return (
+        <>
+            <RecoilRoot>
+                <UserProvider
+                    authRepository={authRepository}
+                    csrfRepository={csrfRepository}
+                >
+                    <Authorized>
+                        <HomeScreen/>
+                    </Authorized>
+
+                    <Unauthorized>
+                        <LoginScreen/>
+                    </Unauthorized>
+                </UserProvider>
+            </RecoilRoot>
+        </>
+    )
 }
 
 export default App

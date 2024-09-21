@@ -18,6 +18,16 @@ class SecurityConfig {
             .csrf {
                 it.csrfTokenRepository(HttpSessionCsrfTokenRepository())
             }
+            .authorizeHttpRequests {
+                it.requestMatchers("/auth/api/users/me").authenticated()
+                it.requestMatchers( "/logout").permitAll()
+            }
+            .oauth2Login {
+                it.defaultSuccessUrl("http://localhost:5173", true)
+            }
+            .logout {
+                it.logoutSuccessUrl("http://localhost:5173")
+            }
 
         return http.build()
     }
