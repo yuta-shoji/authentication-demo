@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       # General
-      UserPoolName: yuta-dev-user-pool-2
+      UserPoolName: yuta-dev-user-pool
       UsernameConfiguration:
         CaseSensitive: false
 
@@ -49,7 +49,7 @@ Resources:
     Properties:
       UserPoolId:
         Ref: CognitoUserPool
-      Domain: yuta-dev-domain-2
+      Domain: yuta-dev-domain
 
   # User Pool Client Configuration
   UserPoolClient:
@@ -59,7 +59,7 @@ Resources:
       # General
       UserPoolId:
         Ref: CognitoUserPool
-      ClientName: yuta-dev-cognito-client-2
+      ClientName: yuta-dev-cognito-client
       GenerateSecret: true
       ExplicitAuthFlows:
         - ALLOW_ADMIN_USER_PASSWORD_AUTH
