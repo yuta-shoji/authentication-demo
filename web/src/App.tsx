@@ -1,10 +1,9 @@
 import './App.css'
 import {DefaultCsrfRepository} from "./repository/CsrfRepository.ts";
 import {RecoilRoot} from "recoil";
-import Authorized from "./view/auth/Authorized.tsx";
-import UserProvider from "./view/auth/UserProvider.tsx";
+import {Route, Routes} from 'react-router-dom'
+import AuthProvider from "./view/auth/AuthProvider.tsx";
 import {DefaultAuthRepository} from "./repository/AuthRepository.ts";
-import Unauthorized from "./view/auth/Unauthorized.tsx";
 import LoginScreen from "./view/auth/LoginScreen.tsx";
 import HomeScreen from "./view/HomeScreen.tsx";
 
@@ -14,22 +13,26 @@ function App() {
     const csrfRepository = new DefaultCsrfRepository()
 
     return (
-        <>
-            <RecoilRoot>
-                <UserProvider
-                    authRepository={authRepository}
-                    csrfRepository={csrfRepository}
-                >
-                    <Authorized>
-                        <HomeScreen/>
-                    </Authorized>
+        <RecoilRoot>
+            <Routes>
+                <Route path="/">
+                    <Route path="" element={
+                        <AuthProvider
+                            authRepository={authRepository}
+                            csrfRepository={csrfRepository}
+                        />
+                    }/>
 
-                    <Unauthorized>
+                    <Route path="home" element={
+                        <HomeScreen/>
+                    }/>
+
+                    <Route path="login" element={
                         <LoginScreen/>
-                    </Unauthorized>
-                </UserProvider>
-            </RecoilRoot>
-        </>
+                    }/>
+                </Route>
+            </Routes>
+        </RecoilRoot>
     )
 }
 

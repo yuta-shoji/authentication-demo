@@ -9,6 +9,7 @@ export class DefaultCsrfRepository implements CsrfRepository {
 
     async getCsrfToken(): Promise<string> {
         const url = '/api/csrf'
-        return await this.http.get(url)
+        const data = await this.http.get(url)
+        return data.token
     }
 }

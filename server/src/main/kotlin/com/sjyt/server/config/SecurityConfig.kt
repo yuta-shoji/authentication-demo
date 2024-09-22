@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
 
 @EnableWebSecurity
 @Configuration
@@ -17,11 +18,12 @@ class SecurityConfig {
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf {
-//                it.csrfTokenRepository(HttpSessionCsrfTokenRepository())
-                it.disable()
+                it.csrfTokenRepository(HttpSessionCsrfTokenRepository())
+                it.ignoringRequestMatchers("/logout")
             }
             .authorizeHttpRequests {
                 it.requestMatchers("/auth/api/users/me").authenticated()
+                it.requestMatchers("/api/**").authenticated()
                 it.requestMatchers( "/logout").permitAll()
             }
             .oauth2Login {
