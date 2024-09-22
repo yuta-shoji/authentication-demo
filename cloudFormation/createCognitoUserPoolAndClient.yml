@@ -1,0 +1,91 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Resources:
+  # User Pool Configuration
+  CognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      # General
+      UserPoolName: yuta-dev-user-pool-2
+      UsernameConfiguration:
+        CaseSensitive: false
+
+      # Sign in Experience
+      UsernameAttributes:
+        - email
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: true
+          RequireUppercase: true
+          TemporaryPasswordValidityDays: 7
+      MfaConfiguration: 'OFF'
+      AccountRecoverySetting:
+        RecoveryMechanisms:
+          - Name: verified_email
+            Priority: 1
+
+      # Sign up Experience
+      AutoVerifiedAttributes:
+        - email
+      UserAttributeUpdateSettings:
+        AttributesRequireVerificationBeforeUpdate:
+          - email
+      Schema:
+        - Name: email
+          AttributeDataType: String
+          Required: true
+        - Name: company
+          AttributeDataType: String
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: true
+
+  # Cognito Domain Configuration
+  CognitoDomain:
+    Type: AWS::Cognito::UserPoolDomain
+    DependsOn: CognitoUserPool
+    Properties:
+      UserPoolId:
+        Ref: CognitoUserPool
+      Domain: yuta-dev-domain-2
+
+  # User Pool Client Configuration
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    DependsOn: CognitoDomain
+    Properties:
+      # General
+      UserPoolId:
+        Ref: CognitoUserPool
+      ClientName: yuta-dev-cognito-client-2
+      GenerateSecret: true
+      ExplicitAuthFlows:
+        - ALLOW_ADMIN_USER_PASSWORD_AUTH
+        - ALLOW_REFRESH_TOKEN_AUTH
+      AuthSessionValidity: 3
+      TokenValidityUnits:
+        AccessToken: minutes
+        IdToken: minutes
+        RefreshToken: days
+      AccessTokenValidity: 60
+      IdTokenValidity: 60
+      RefreshTokenValidity: 30
+      EnableTokenRevocation: true
+      PreventUserExistenceErrors: 'ENABLED'
+
+      # Hosted UI
+      EnablePropagateAdditionalUserContextData: false
+      CallbackURLs:
+        - http://localhost:8080/login/oauth2/code/cognito
+      SupportedIdentityProviders:
+        - COGNITO
+      AllowedOAuthFlows:
+        - code
+        - implicit
+      AllowedOAuthScopes:
+        - aws.cognito.signin.user.admin
+        - email
+        - openid
+        - phone
