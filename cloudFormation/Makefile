@@ -5,3 +5,12 @@ create-cognito-user-pool-and-client:
 				 ParameterKey=Domain,ParameterValue=$(COGNITO_DOMAIN) \
 	--capabilities CAPABILITY_NAMED_IAM \
 	--region ap-northeast-1
+
+create-cognito-user-pool-group:
+	aws cloudformation create-stack --stack-name create-cognito-user-pool-group \
+	--template-body file://createCognitoUserGroup.yml \
+	--parameters ParameterKey=UserPoolId,ParameterValue=$(COGNITO_USER_POOL_ID) \
+				 ParameterKey=UserGroupName,ParameterValue=$(COGNITO_USER_POOL_GROUP_NAME) \
+				 ParameterKey=Description,ParameterValue=$(COGNITO_USER_POOL_GROUP_DESCRIPTION) \
+	--capabilities CAPABILITY_NAMED_IAM \
+	--region ap-northeast-1
