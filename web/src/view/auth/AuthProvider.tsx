@@ -13,14 +13,14 @@ interface Props {
 const AuthProvider = (
     {authRepository, csrfRepository}: Props
 ) => {
-    useUserProvider(authRepository, csrfRepository)
+    useAuthProvider(authRepository, csrfRepository)
 
     return (
         <>Now loading...</>
     )
 }
 
-const useUserProvider = (
+const useAuthProvider = (
     authRepository: AuthRepository,
     csrfRepository: CsrfRepository,
 ) => {

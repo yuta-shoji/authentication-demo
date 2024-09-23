@@ -1,5 +1,13 @@
 {
   "files": [],
+  "compilerOptions": {
+    "types": ["vitest/globals"]
+  },
+  "include": [
+    "src",
+    "node_modules/vitest/globals.d.ts",
+    "./vitest.setup.ts"
+  ],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
