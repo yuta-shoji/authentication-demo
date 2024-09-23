@@ -1,0 +1,1 @@
+export type PartialProps<T extends (...args: any) => any> = Partial<Parameters<T>[0]>

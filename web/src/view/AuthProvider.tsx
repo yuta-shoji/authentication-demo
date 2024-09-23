@@ -1,8 +1,8 @@
-import AuthRepository from "../../repository/AuthRepository.ts";
+import AuthRepository from "../repository/AuthRepository.ts";
 import {useEffect} from "react";
 import {useSetRecoilState} from "recoil";
-import {csrfTokenState, userIsLoggedInState, userState} from "../../recoil/RecoilState.ts";
-import CsrfRepository from "../../repository/CsrfRepository.ts";
+import {csrfTokenState, userIsLoggedInState, userState} from "../recoil/RecoilState.ts";
+import CsrfRepository from "../repository/CsrfRepository.ts";
 import {useNavigate} from "react-router-dom";
 
 interface Props {
@@ -35,12 +35,14 @@ const useAuthProvider = (
             .then(user => {
                 setUser(user)
                 setUserIsLoggedIn(true)
+
                 navigate("/home")
 
                 csrfRepository.getCsrfToken()
                     .then(csrfToken => {
                         setCsrfToken(csrfToken)
                     })
+
             })
             .catch(error => {
                 setUserIsLoggedIn(false)

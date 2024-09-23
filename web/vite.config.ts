@@ -8,7 +8,12 @@ export default defineConfig({
   plugins: [react()],
   test: {
     globals: true,
-    environment: "happy-dom",
+    environment: 'jsdom',
+    setupFiles: ['./vitest.setup.ts'],
+    include: [
+        'src/tests/**/*.{test,spec}.{js,ts,jsx,tsx}',
+        'src/tests/*.{test,spec}.{js,ts,jsx,tsx}',
+    ],
   },
   server: {
     proxy: {

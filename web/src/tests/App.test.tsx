@@ -1,15 +1,16 @@
-import {describe, expect, test, vitest} from "vitest";
+import {describe, test, vitest} from "vitest";
 import App from "../App.tsx";
 import {renderApplicationInMemoryRouter} from "./helper/renderApplication.tsx";
-import AuthProvider from "../view/auth/AuthProvider.tsx";
+import AuthProvider from "../view/AuthProvider.tsx";
 import {DummyAuthRepository} from "./repository/doubles/AuthRepositoryDoubles.ts";
 import {DummyCsrfRepository} from "./repository/doubles/CsrfRepositoryDoubles.ts";
 import HomeScreen from "../view/HomeScreen.tsx";
-import LoginScreen from "../view/auth/LoginScreen.tsx";
+import LoginScreen from "../view/LoginScreen.tsx";
+import {PartialProps} from "./helper/PartialProps.ts";
 
 vitest.mock('../view/HomeScreen.tsx')
-vitest.mock('../view/auth/LoginScreen.tsx')
-vitest.mock('../view/auth/AuthProvider.tsx')
+vitest.mock('../view/LoginScreen.tsx')
+vitest.mock('../view/AuthProvider.tsx')
 
 describe('App', () => {
     test('["/"] にアクセスした時、AuthProviderに正しいrepositoryを渡して描画する', async () => {
@@ -45,16 +46,15 @@ describe('App', () => {
 
 async function renderApp(
     path: string = '/',
-    props: Partial<Parameters<typeof App>[0]> = {
-        authRepository: new DummyAuthRepository(),
-        csrfRepository: new DummyCsrfRepository(),
-    },
+    partialProps?: PartialProps<App>
 ) {
+    const props = {
+            authRepository: new DummyAuthRepository(),
+            csrfRepository: new DummyCsrfRepository(),
+            ...partialProps,
+        }
     return await renderApplicationInMemoryRouter(
-        <App
-            authRepository={props.authRepository!}
-            csrfRepository={props.csrfRepository!}
-        />,
+        <App {...props}/>,
         path,
     )
 }
