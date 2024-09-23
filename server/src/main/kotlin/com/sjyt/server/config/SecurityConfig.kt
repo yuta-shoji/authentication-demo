@@ -25,6 +25,7 @@ class SecurityConfig {
                 it.requestMatchers("/auth/api/users/me").authenticated()
                 it.requestMatchers("/api/**").authenticated()
                 it.requestMatchers( "/logout").permitAll()
+                it.anyRequest().permitAll()
             }
             .oauth2Login {
                 it.defaultSuccessUrl("http://localhost:5173", true)
