@@ -1,4 +1,4 @@
-# Google & Cognito OAuth2 Authentication in Spring Security
+# Google & Cognito Authentication in Spring Security
 
 ![cover.png](cover.png)
 
