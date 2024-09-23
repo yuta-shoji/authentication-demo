@@ -8,7 +8,9 @@ const HomeScreen = () => {
         <>
             <h1>Welcome to here!!</h1>
 
-            <div aria-label="email">{user.email}</div>
+            {user &&
+                <div aria-label="email">{user.email}</div>
+            }
 
             <form action="http://localhost:8080/logout" method="post">
                 <button type="submit">ログアウト</button>

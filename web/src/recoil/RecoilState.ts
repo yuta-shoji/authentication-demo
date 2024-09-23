@@ -17,7 +17,7 @@ export const csrfTokenState = atom<string | null>({
     default: null,
 })
 
-export const userState = atom<User>({
+export const userState = atom<User | null>({
     key: RecoilState.UserState,
     default: null,
 })
