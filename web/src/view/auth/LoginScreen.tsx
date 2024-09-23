@@ -1,5 +1,4 @@
 const LoginScreen = () => {
-    console.log('LoginScreen rendered')
     return (
         <>
             <h1>ログイン</h1>

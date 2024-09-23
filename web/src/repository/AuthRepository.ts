@@ -1,14 +1,15 @@
 import User from "../model/User.ts";
+import Http, {NetworkHttp} from "../http/Http.ts";
 
 export default interface AuthRepository {
     getUser(): Promise<User>
 }
 
 export class DefaultAuthRepository implements AuthRepository {
+    constructor(private http: Http = new NetworkHttp()) {}
+
     async getUser(): Promise<User> {
         const url = '/auth/api/users/me'
-        const res = await fetch(url)
-        if (!res.ok) throw Error("401")
-        return await res.json()
+        return await this.http.get(url)
     }
 }

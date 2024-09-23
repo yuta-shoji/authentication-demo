@@ -1,4 +1,5 @@
-import Http, {NetworkHttp} from "../http/NetworkHttp.ts";
+import Http, {NetworkHttp} from "../http/Http.ts";
+import CsrfResponse from "../model/CsrfResponse.ts";
 
 export default interface CsrfRepository {
     getCsrfToken(): Promise<string>
@@ -9,7 +10,7 @@ export class DefaultCsrfRepository implements CsrfRepository {
 
     async getCsrfToken(): Promise<string> {
         const url = '/api/csrf'
-        const data = await this.http.get(url)
+        const data = await this.http.get(url) as CsrfResponse
         return data.token
     }
 }
