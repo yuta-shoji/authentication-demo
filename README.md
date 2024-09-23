@@ -1,5 +1,8 @@
 # Google & Cognito OAuth2 Authentication in Spring Security
 
+![cover.png](cover.png)
+
+
 # Setup
 
 ### 1. Prepare server env file
