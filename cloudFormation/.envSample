@@ -1,0 +1,2 @@
+export COGNITO_USER_POOL_NAME=""
+export COGNITO_DOMAIN=""

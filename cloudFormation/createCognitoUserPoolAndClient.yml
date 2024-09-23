@@ -1,4 +1,9 @@
 AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  UserPoolName:
+    Type: String
+  Domain:
+    Type: String
 
 Resources:
   # User Pool Configuration
@@ -6,7 +11,7 @@ Resources:
     Type: AWS::Cognito::UserPool
     Properties:
       # General
-      UserPoolName: yuta-dev-user-pool
+      UserPoolName: !Ref UserPoolName
       UsernameConfiguration:
         CaseSensitive: false
 
@@ -49,7 +54,7 @@ Resources:
     Properties:
       UserPoolId:
         Ref: CognitoUserPool
-      Domain: yuta-dev-domain
+      Domain: !Ref Domain
 
   # User Pool Client Configuration
   UserPoolClient:
