@@ -1,9 +1,9 @@
 import './App.css'
-import CsrfRepository, {DefaultCsrfRepository} from "./repository/CsrfRepository.ts";
+import CsrfRepository from "./repository/CsrfRepository.ts";
 import {RecoilRoot} from "recoil";
 import {Route, Routes} from 'react-router-dom'
 import AuthProvider from "./view/AuthProvider.tsx";
-import AuthRepository, {DefaultAuthRepository} from "./repository/AuthRepository.ts";
+import AuthRepository from "./repository/AuthRepository.ts";
 import LoginScreen from "./view/LoginScreen.tsx";
 import HomeScreen from "./view/HomeScreen.tsx";
 
@@ -14,8 +14,8 @@ interface AppProps {
 
 function App(
     {
-        authRepository = new DefaultAuthRepository(),
-        csrfRepository = new DefaultCsrfRepository(),
+        authRepository,
+        csrfRepository,
     }: AppProps
 ) {
 

@@ -1,11 +1,10 @@
-import CsrfRepository, {DefaultCsrfRepository} from "../../repository/CsrfRepository.ts";
+import {DefaultCsrfRepository} from "../../repository/CsrfRepository.ts";
 import {DummyHttp, SpyHttp, StubHttp} from "../http/HttpDoubles.ts";
 import Http from "../../http/Http.ts";
-import {expect} from "vitest";
-import {describe, test} from 'vitest'
+import {describe, expect, test} from "vitest";
 import CsrfResponseBuilder from "../model/CsrfResponseBuilder.ts";
 
-describe(`${CsrfRepository}`, () => {
+describe(`CsrfRepository`, () => {
     describe('getCsrfToken', () => {
         test('httpのgetに正しい引数を渡して呼ぶ', () => {
             const spyHttp = new SpyHttp()

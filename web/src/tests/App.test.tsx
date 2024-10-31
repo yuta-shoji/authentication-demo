@@ -6,7 +6,6 @@ import {DummyAuthRepository} from "./repository/doubles/AuthRepositoryDoubles.ts
 import {DummyCsrfRepository} from "./repository/doubles/CsrfRepositoryDoubles.ts";
 import HomeScreen from "../view/HomeScreen.tsx";
 import LoginScreen from "../view/LoginScreen.tsx";
-import {PartialProps} from "./helper/PartialProps.ts";
 
 vitest.mock('../view/HomeScreen.tsx')
 vitest.mock('../view/LoginScreen.tsx')
@@ -46,7 +45,7 @@ describe('App', () => {
 
 async function renderApp(
     path: string = '/',
-    partialProps?: PartialProps<App>
+    partialProps?: Partial<Parameters<typeof App>[0]>
 ) {
     const props = {
             authRepository: new DummyAuthRepository(),

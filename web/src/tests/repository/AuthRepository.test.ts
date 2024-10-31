@@ -1,11 +1,10 @@
-import AuthRepository, {DefaultAuthRepository} from "../../repository/AuthRepository.ts";
+import {DefaultAuthRepository} from "../../repository/AuthRepository.ts";
 import {DummyHttp, SpyHttp, StubHttp} from "../http/HttpDoubles.ts";
 import Http from "../../http/Http.ts";
-import {expect} from "vitest";
+import {describe, expect, test} from "vitest";
 import UserBuilder from "../model/UserBuilder.ts";
-import {describe, test} from 'vitest'
 
-describe(`${AuthRepository}`, () => {
+describe(`AuthRepository`, () => {
     describe('getUser', () => {
         test('httpのgetに正しい引数を渡して呼ぶ', () => {
             const spyHttp = new SpyHttp()

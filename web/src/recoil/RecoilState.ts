@@ -9,7 +9,7 @@ export enum RecoilState {
 
 export const userIsLoggedInState = atom<boolean>({
     key: RecoilState.UserIsLoggedInState,
-    default: '',
+    default: false,
 })
 
 export const csrfTokenState = atom<string | null>({

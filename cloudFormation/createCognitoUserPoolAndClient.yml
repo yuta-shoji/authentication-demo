@@ -48,7 +48,7 @@ Resources:
         AllowAdminCreateUserOnly: true
 
   # Cognito Domain Configuration
-  CognitoDomain:
+  CognitoUserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain
     DependsOn: CognitoUserPool
     Properties:
@@ -57,9 +57,9 @@ Resources:
       Domain: !Ref Domain
 
   # User Pool Client Configuration
-  UserPoolClient:
+  CognitoUserPoolClient:
     Type: AWS::Cognito::UserPoolClient
-    DependsOn: CognitoDomain
+    DependsOn: "CognitoUserPoolDomain"
     Properties:
       # General
       UserPoolId:
@@ -79,6 +79,7 @@ Resources:
       RefreshTokenValidity: 30
       EnableTokenRevocation: true
       PreventUserExistenceErrors: 'ENABLED'
+      AllowedOAuthFlowsUserPoolClient: true
 
       # Hosted UI
       EnablePropagateAdditionalUserContextData: false
@@ -94,3 +95,14 @@ Resources:
         - email
         - openid
         - phone
+
+Outputs:
+  UserPoolId:
+    Value: !Ref CognitoUserPool
+    Description: ID of the Cognito User Pool
+  UserPoolClientId:
+    Value: !Ref CognitoUserPoolClient
+    Description: ID of the Cognito User Pool Client
+  CognitoDomain:
+    Value: !Sub https://${CognitoUserPoolDomain}.auth.${AWS::Region}.amazoncognito.com
+    Description: Cognito Domain URL

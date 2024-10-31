@@ -1,11 +1,11 @@
 import Http from "../../http/Http.ts";
 
 export class DummyHttp implements Http {
-    get<T>(url: string, headers?: object): Promise<T> {
+    get<T>(_url: string, _headers?: object): Promise<T> {
         return Promise.resolve({} as T)
     }
 
-    post<T>(url: string, body?: object, headers?: object): Promise<T> {
+    post<T>(_url: string, _body?: object, _headers?: object): Promise<T> {
         return Promise.resolve({} as T)
     }
 }
@@ -32,12 +32,12 @@ export class SpyHttp implements Http {
 
 export class StubHttp implements Http {
     get_returnValue: Promise<any> = Promise.resolve()
-    get<T>(url: string, headers?: object): Promise<T> {
+    get<T>(_url: string, _headers?: object): Promise<T> {
         return this.get_returnValue
     }
 
     post_returnValue: Promise<any> = Promise.resolve()
-    post<T>(url: string, body?: object, headers?: object): Promise<T> {
+    post<T>(_url: string, _body?: object, _headers?: object): Promise<T> {
         return this.post_returnValue
     }
 }

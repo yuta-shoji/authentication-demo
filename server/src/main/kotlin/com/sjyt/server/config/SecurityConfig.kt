@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
@@ -14,7 +15,10 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
+import java.io.File
+import java.nio.file.Files
 
 @EnableWebSecurity
 @Configuration
@@ -31,19 +35,21 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it
+                    .requestMatchers("/**").hasAnyRole("ADMIN")
                     .requestMatchers("/auth/api/users/me").authenticated()
                     .requestMatchers("/api/**").authenticated()
                     .requestMatchers("/logout").permitAll()
                     .anyRequest().permitAll()
             }
             .oauth2Login {
-                it.defaultSuccessUrl("http://localhost:5173", true)
+//                it.defaultSuccessUrl("http://localhost:8080", true)
+                it.successHandler(CustomAuthenticationSuccessHandler())
             }
             .exceptionHandling {
                 it.authenticationEntryPoint(CustomAuthenticationEntryPoint())
             }
             .logout {
-                it.logoutSuccessUrl("http://localhost:5173")
+                it.logoutSuccessUrl("http://localhost:8080")
             }
 
         return http.build()
@@ -60,6 +66,7 @@ class SecurityConfig(
             val mappedAuthorities: MutableSet<GrantedAuthority?> = HashSet()
             val googleIssuerUri = "https://accounts.google.com"
             val issuer = authority.idToken.issuer.toString()
+            println("-------------------------------issuer: $issuer")
 
             when (issuer) {
                 cognitoIssuerUri -> {
@@ -67,6 +74,7 @@ class SecurityConfig(
                         ?: emptyList<GrantedAuthority>()
                     val roleAuthorities = roles
                         .map { role -> SimpleGrantedAuthority("ROLE_$role") }
+                    println("roleAuthorities: $roleAuthorities")
                     mappedAuthorities.addAll(roleAuthorities)
                 }
 
@@ -79,6 +87,38 @@ class SecurityConfig(
         }
     }
 }
+
+class CustomAuthenticationSuccessHandler : AuthenticationSuccessHandler {
+    override fun onAuthenticationSuccess(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        authentication: Authentication
+    ) {
+        val authorities = authentication.authorities.map { it.authority }
+
+        println("=================================")
+        if (authorities.contains("ROLE_ADMIN")) {
+            println("ADMIN")
+            response.sendRedirect("http://localhost:8080")
+        } else if (authorities.contains("ROLE_TEST")) {
+            println("TEST")
+            val htmlFile = File("src/main/resources/static/test.html")
+            if (htmlFile.exists()) {
+                response.contentType = "text/html"
+                response.characterEncoding = "UTF-8"
+                Files.copy(htmlFile.toPath(), response.outputStream)
+                response.outputStream.flush()
+            } else {
+                response.sendError(HttpServletResponse.SC_NOT_FOUND, "Page not found")
+            }
+        } else {
+            println("OTHER")
+            // その他のユーザーの場合はデフォルトの動作に設定
+            response.sendRedirect("/")
+        }
+    }
+}
+
 
 class CustomAuthenticationEntryPoint : AuthenticationEntryPoint {
     override fun commence(
