@@ -14,7 +14,6 @@ import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMap
 import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository
 
 @EnableWebSecurity
 @Configuration
@@ -26,14 +25,17 @@ class SecurityConfig(
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
             .csrf {
-                it.csrfTokenRepository(HttpSessionCsrfTokenRepository())
-                it.ignoringRequestMatchers("/logout")
+                it.disable()
+//                it.csrfTokenRepository(HttpSessionCsrfTokenRepository())
+//                it.ignoringRequestMatchers("/logout")
             }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/auth/api/users/me").authenticated()
-                    .requestMatchers("/api/**").authenticated()
-                    .requestMatchers("/logout").permitAll()
+//                    .requestMatchers("/auth/api/users/me").authenticated()
+//                    .requestMatchers("/api/**").authenticated()
+//                    .requestMatchers("/api/auth/cognito/create-user").permitAll()
+//                    .requestMatchers("/logout").permitAll()
+                    .requestMatchers("**").permitAll()
                     .anyRequest().permitAll()
             }
             .oauth2Login {

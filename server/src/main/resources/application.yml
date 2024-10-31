@@ -29,3 +29,11 @@ logging:
     org:
       springframework:
         security: debug
+
+aws:
+  cognito:
+    client-id: ${COGNITO_CLIENT_ID}
+    client-secret: ${COGNITO_CLIENT_SECRET}
+    client-name: ${COGNITO_CLIENT_NAME}
+    region: ${COGNITO_REGION}
+    user-pool-id: ${COGNITO_USER_POOL_ID}
