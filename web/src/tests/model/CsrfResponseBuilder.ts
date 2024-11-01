@@ -1,4 +1,4 @@
-import CsrfResponse from "../../model/CsrfResponse.ts";
+import CsrfResponse from "../../model/response/CsrfResponse.ts";
 
 export default class CsrfResponseBuilder {
     static build(overrides: Partial<CsrfResponse> = {}): CsrfResponse {

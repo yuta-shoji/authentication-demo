@@ -1,6 +1,7 @@
 package com.sjyt.server.controller
 
 import com.sjyt.server.model.AppUser
+import com.sjyt.server.model.Role
 import com.sjyt.server.model.User
 import org.springframework.http.HttpStatus
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -11,12 +12,14 @@ import org.springframework.web.bind.annotation.RestController
 import org.springframework.web.server.ResponseStatusException
 
 @RestController
-@RequestMapping("/auth/api/users")
+@RequestMapping("/api/users")
 class UserController {
     @GetMapping("/me")
     fun getUser(@AuthenticationPrincipal user: OAuth2User): User {
         val email = user.getAttribute<String>("email")
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No email provided")
-        return AppUser(email)
+        val role = user.getAttribute<List<String>>("cognito:groups")?.firstOrNull()
+            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "No email provided")
+        return AppUser(email, Role.init(role))
     }
 }

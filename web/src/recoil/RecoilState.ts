@@ -1,8 +1,10 @@
 import {atom} from "recoil";
-import User from "../model/User.ts";
+import {User} from "../model/User.ts";
+import {Role} from "../model/Role.ts";
 
 export enum RecoilState {
     CsrfTokenState = 'csrfTokenState',
+    UserRoleState = 'userRoleState',
     UserIsLoggedInState = 'userIsLoggedInState',
     UserState = 'userState',
 }
@@ -10,6 +12,11 @@ export enum RecoilState {
 export const userIsLoggedInState = atom<boolean>({
     key: RecoilState.UserIsLoggedInState,
     default: false,
+})
+
+export const userRoleState = atom<Role | null>({
+    key: RecoilState.UserRoleState,
+    default: null,
 })
 
 export const csrfTokenState = atom<string | null>({

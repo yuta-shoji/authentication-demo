@@ -1,23 +1,22 @@
 import AuthRepository from "../repository/AuthRepository.ts";
-import {useEffect} from "react";
+import {ReactNode, useEffect} from "react";
 import {useSetRecoilState} from "recoil";
-import {csrfTokenState, userIsLoggedInState, userState} from "../recoil/RecoilState.ts";
+import {csrfTokenState, userRoleState, userIsLoggedInState, userState} from "../recoil/RecoilState.ts";
 import CsrfRepository from "../repository/CsrfRepository.ts";
 import {useNavigate} from "react-router-dom";
 
 interface Props {
     authRepository: AuthRepository
     csrfRepository: CsrfRepository
+    children: ReactNode,
 }
 
 const AuthProvider = (
-    {authRepository, csrfRepository}: Props
+    {authRepository, csrfRepository, children}: Props
 ) => {
     useAuthProvider(authRepository, csrfRepository)
 
-    return (
-        <>Now loading...</>
-    )
+    return children
 }
 
 const useAuthProvider = (
@@ -26,6 +25,7 @@ const useAuthProvider = (
 ) => {
     const setUser = useSetRecoilState(userState)
     const setCsrfToken = useSetRecoilState(csrfTokenState)
+    const setUserRole = useSetRecoilState(userRoleState)
     const setUserIsLoggedIn = useSetRecoilState(userIsLoggedInState)
 
     const navigate = useNavigate()
@@ -33,7 +33,8 @@ const useAuthProvider = (
     useEffect(() => {
         authRepository.getUser()
             .then(user => {
-                setUser(user)
+                setUser({email: user.email})
+                setUserRole(user.role)
                 setUserIsLoggedIn(true)
 
                 navigate("/home")

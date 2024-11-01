@@ -6,6 +6,7 @@ import AuthProvider from "./view/AuthProvider.tsx";
 import AuthRepository from "./repository/AuthRepository.ts";
 import LoginScreen from "./view/LoginScreen.tsx";
 import HomeScreen from "./view/HomeScreen.tsx";
+import CreateCognitoUser from "./view/CreateCognitoUser.tsx";
 
 interface AppProps {
     authRepository: AuthRepository
@@ -21,24 +22,26 @@ function App(
 
     return (
         <RecoilRoot>
-            <Routes>
-                <Route path="/">
-                    <Route path="" element={
-                        <AuthProvider
-                            authRepository={authRepository}
-                            csrfRepository={csrfRepository}
-                        />
-                    }/>
+            <AuthProvider
+                authRepository={authRepository}
+                csrfRepository={csrfRepository}
+            >
+                <Routes>
+                    <Route path="/">
+                        <Route path="home" element={
+                            <HomeScreen/>
+                        }/>
 
-                    <Route path="home" element={
-                        <HomeScreen/>
-                    }/>
+                        <Route path="login" element={
+                            <LoginScreen/>
+                        }/>
 
-                    <Route path="login" element={
-                        <LoginScreen/>
-                    }/>
-                </Route>
-            </Routes>
+                        <Route path="create-cognito-user" element={
+                            <CreateCognitoUser/>
+                        }/>
+                    </Route>
+                </Routes>
+            </AuthProvider>
         </RecoilRoot>
     )
 }

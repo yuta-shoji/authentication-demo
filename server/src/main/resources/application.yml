@@ -31,9 +31,9 @@ logging:
         security: debug
 
 aws:
+  access-key-id: ${AWS_ACCESS_KEY_ID}
+  secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+  session-token: ${AWS_SESSION_TOKEN}
   cognito:
-    client-id: ${COGNITO_CLIENT_ID}
-    client-secret: ${COGNITO_CLIENT_SECRET}
-    client-name: ${COGNITO_CLIENT_NAME}
     region: ${COGNITO_REGION}
     user-pool-id: ${COGNITO_USER_POOL_ID}

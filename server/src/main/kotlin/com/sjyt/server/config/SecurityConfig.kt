@@ -1,5 +1,6 @@
 package com.sjyt.server.config
 
+import com.sjyt.server.model.Role
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -7,20 +8,14 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.AuthenticationException
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.authority.SimpleGrantedAuthority
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper
-import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority
 import org.springframework.security.web.AuthenticationEntryPoint
 import org.springframework.security.web.SecurityFilterChain
 
 @EnableWebSecurity
 @Configuration
-class SecurityConfig(
-    @Value("\${spring.security.oauth2.client.provider.cognito.issuer-uri}")
-    private val cognitoIssuerUri: String,
-) {
+class SecurityConfig {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
@@ -31,55 +26,27 @@ class SecurityConfig(
             }
             .authorizeHttpRequests {
                 it
-//                    .requestMatchers("/auth/api/users/me").authenticated()
-//                    .requestMatchers("/api/**").authenticated()
-//                    .requestMatchers("/api/auth/cognito/create-user").permitAll()
-//                    .requestMatchers("/logout").permitAll()
-                    .requestMatchers("**").permitAll()
-                    .anyRequest().permitAll()
+                    .requestMatchers("/api/auth/cognito/create-user/employee").hasAnyRole(
+                        Role.ADMIN.toString(),
+                        Role.MANAGER.toString(),
+                    )
+                    .requestMatchers("/api/**").authenticated()
+                    .anyRequest().authenticated()
             }
             .oauth2Login {
-                it.defaultSuccessUrl("http://localhost:5173", true)
+                it.defaultSuccessUrl("http://localhost:5174", true)
+            }
+            .sessionManagement { session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             }
             .exceptionHandling {
                 it.authenticationEntryPoint(CustomAuthenticationEntryPoint())
             }
             .logout {
-                it.logoutSuccessUrl("http://localhost:5173")
+                it.logoutSuccessUrl("http://localhost:5174")
             }
 
         return http.build()
-    }
-
-    @Bean
-    fun userAuthoritiesMapper(): GrantedAuthoritiesMapper {
-        return GrantedAuthoritiesMapper { authorities: Collection<GrantedAuthority>? ->
-            if (authorities.isNullOrEmpty()) return@GrantedAuthoritiesMapper emptySet<GrantedAuthority>()
-
-            val authority = authorities.first()
-            if (authority !is OidcUserAuthority) return@GrantedAuthoritiesMapper emptySet<GrantedAuthority>()
-
-            val mappedAuthorities: MutableSet<GrantedAuthority?> = HashSet()
-            val googleIssuerUri = "https://accounts.google.com"
-            val issuer = authority.idToken.issuer.toString()
-
-            when (issuer) {
-                cognitoIssuerUri -> {
-                    val roles = (authority.attributes["cognito:groups"] as? List<*>)
-                        ?: emptyList<GrantedAuthority>()
-                    val roleAuthorities = roles
-                        .map { role -> SimpleGrantedAuthority("ROLE_$role") }
-                    println("roleAuthorities: $roleAuthorities")
-                    mappedAuthorities.addAll(roleAuthorities)
-                }
-
-                googleIssuerUri -> {
-                    val employeeRole = SimpleGrantedAuthority("ROLE_EMPLOYEE")
-                    mappedAuthorities.add(employeeRole)
-                }
-            }
-            mappedAuthorities
-        }
     }
 }
 

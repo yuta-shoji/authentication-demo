@@ -14,7 +14,7 @@ class CognitoController(
 ) {
     @PostMapping("/create-user/employee")
     fun createEmployeeUser(
-        @RequestBody body: CreateUserBody
+        @RequestBody body: CreateUserBody,
     ) {
         cognitoService.createEmployeeUser(body.email)
     }

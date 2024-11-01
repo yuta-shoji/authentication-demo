@@ -1,5 +1,5 @@
 import Http, {NetworkHttp} from "../http/Http.ts";
-import CsrfResponse from "../model/CsrfResponse.ts";
+import CsrfResponse from "../model/response/CsrfResponse.ts";
 
 export default interface CsrfRepository {
     getCsrfToken(): Promise<string>
