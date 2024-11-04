@@ -47,6 +47,38 @@ Resources:
       AdminCreateUserConfig:
         AllowAdminCreateUserOnly: true
 
+  CognitoAdminUserPoolGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      UserPoolId: !Ref CognitoUserPool
+      GroupName: ADMIN
+      Description: 開発者
+      Precedence: 0
+
+  CognitoManagerUserPoolGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      UserPoolId: !Ref CognitoUserPool
+      GroupName: MANAGER
+      Description: 管理者
+      Precedence: 0
+
+  CognitoEmployeeUserPoolGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      UserPoolId: !Ref CognitoUserPool
+      GroupName: EMPLOYEE
+      Description: 従業員
+      Precedence: 0
+
+  CognitoTestUserPoolGroup:
+    Type: AWS::Cognito::UserPoolGroup
+    Properties:
+      UserPoolId: !Ref CognitoUserPool
+      GroupName: TEST
+      Description: テストユーザー
+      Precedence: 0
+
   # Cognito Domain Configuration
   CognitoUserPoolDomain:
     Type: AWS::Cognito::UserPoolDomain

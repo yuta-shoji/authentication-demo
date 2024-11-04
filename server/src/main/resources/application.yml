@@ -37,3 +37,6 @@ aws:
   cognito:
     region: ${COGNITO_REGION}
     user-pool-id: ${COGNITO_USER_POOL_ID}
+
+authorization:
+  redirectUrl: ${REDIRECT_URL_TO_FRONT}

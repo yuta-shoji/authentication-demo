@@ -1,9 +1,9 @@
 package com.sjyt.server.config
 
+import com.sjyt.server.authentication.CustomOAuth2SuccessHandler
 import com.sjyt.server.model.Role
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -15,7 +15,9 @@ import org.springframework.security.web.SecurityFilterChain
 
 @EnableWebSecurity
 @Configuration
-class SecurityConfig {
+class SecurityConfig(
+    private val oAuth2SuccessHandler: CustomOAuth2SuccessHandler
+) {
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
@@ -34,7 +36,7 @@ class SecurityConfig {
                     .anyRequest().authenticated()
             }
             .oauth2Login {
-                it.defaultSuccessUrl("http://localhost:5174", true)
+                it.successHandler(oAuth2SuccessHandler)
             }
             .sessionManagement { session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
